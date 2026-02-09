@@ -1,15 +1,26 @@
 import { useState } from "react";
 
 const moods = [
-  { emoji: "😢", label: "Triste" },
-  { emoji: "😟", label: "Ansioso" },
-  { emoji: "😐", label: "Neutral" },
-  { emoji: "🙂", label: "Bien" },
-  { emoji: "😄", label: "Genial" },
-];
+  { emoji: "😢", label: "Triste", key: "sad" },
+  { emoji: "😟", label: "Ansioso", key: "anxious" },
+  { emoji: "😐", label: "Neutral", key: "neutral" },
+  { emoji: "🙂", label: "Bien", key: "good" },
+  { emoji: "😄", label: "Genial", key: "great" },
+] as const;
 
-const MoodTracker = () => {
+export type MoodKey = (typeof moods)[number]["key"];
+
+interface MoodTrackerProps {
+  onMoodChange?: (mood: MoodKey) => void;
+}
+
+const MoodTracker = ({ onMoodChange }: MoodTrackerProps) => {
   const [selected, setSelected] = useState<number | null>(null);
+
+  const handleSelect = (i: number) => {
+    setSelected(i);
+    onMoodChange?.(moods[i].key);
+  };
 
   return (
     <div className="glass-card rounded-2xl p-5">
@@ -18,7 +29,7 @@ const MoodTracker = () => {
         {moods.map((mood, i) => (
           <button
             key={i}
-            onClick={() => setSelected(i)}
+            onClick={() => handleSelect(i)}
             className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-all ${
               selected === i
                 ? "bg-accent scale-110 shadow-md"
