@@ -16,27 +16,47 @@ interface Task {
 const Index = () => {
   const [mood, setMood] = useState<MoodKey | null>(null);
 
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: "1", text: "Meditar 10 minutos", done: false },
-    { id: "2", text: "Leer 20 páginas", done: false },
-    { id: "3", text: "Hacer ejercicio", done: false },
-  ]);
+  const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+  const [selectedDay, setSelectedDay] = useState(() => {
+    const d = new Date().getDay();
+    return days[d === 0 ? 6 : d - 1];
+  });
+
+  const [tasksByDay, setTasksByDay] = useState<Record<string, Task[]>>(() => {
+    const initial: Record<string, Task[]> = {};
+    days.forEach((day) => { initial[day] = []; });
+    return initial;
+  });
+
+  const tasks = tasksByDay[selectedDay] || [];
 
   const toggleTask = useCallback((id: string) => {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
-  }, []);
+    setTasksByDay((prev) => ({
+      ...prev,
+      [selectedDay]: prev[selectedDay].map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
+    }));
+  }, [selectedDay]);
 
   const addTask = useCallback((text: string, date?: string, time?: string) => {
-    setTasks((prev) => [...prev, { id: Date.now().toString(), text, done: false, date, time }]);
-  }, []);
+    setTasksByDay((prev) => ({
+      ...prev,
+      [selectedDay]: [...prev[selectedDay], { id: Date.now().toString(), text, done: false, date, time }],
+    }));
+  }, [selectedDay]);
 
   const deleteTask = useCallback((id: string) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
-  }, []);
+    setTasksByDay((prev) => ({
+      ...prev,
+      [selectedDay]: prev[selectedDay].filter((t) => t.id !== id),
+    }));
+  }, [selectedDay]);
 
   const editTask = useCallback((id: string, text: string) => {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, text } : t)));
-  }, []);
+    setTasksByDay((prev) => ({
+      ...prev,
+      [selectedDay]: prev[selectedDay].map((t) => (t.id === id ? { ...t, text } : t)),
+    }));
+  }, [selectedDay]);
 
   const container = {
     hidden: { opacity: 0 },
@@ -65,8 +85,25 @@ const Index = () => {
         </motion.div>
 
         <motion.div variants={item}>
+          <div className="glass-card rounded-2xl p-4 mb-4">
+            <div className="flex gap-1.5 overflow-x-auto pb-1">
+              {days.map((day) => (
+                <button
+                  key={day}
+                  onClick={() => setSelectedDay(day)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+                    selectedDay === day
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {day.slice(0, 3)}
+                </button>
+              ))}
+            </div>
+          </div>
           <TaskList
-            title="📋 Lista de tareas pendientes"
+            title={`📋 Tareas - ${selectedDay}`}
             tasks={tasks}
             onToggle={toggleTask}
             onAdd={addTask}
