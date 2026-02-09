@@ -70,7 +70,7 @@ const HeaderCard = ({ mood }: HeaderCardProps) => {
       animate={{ opacity: 1, y: 0 }}
       className="gradient-header rounded-3xl p-6 text-primary-foreground text-center shadow-xl"
     >
-      <h1 className="font-display text-3xl md:text-4xl mb-1">Mi Salud Mental</h1>
+      <h1 className="font-display text-3xl md:text-4xl mb-1">Recording</h1>
       <p className="font-display text-lg opacity-90 mb-4">plantilla de seguimiento</p>
 
       <div className="flex items-center justify-center gap-6 text-sm opacity-90 mb-4">
