@@ -20,6 +20,7 @@ export type Database = {
           day_of_week: string
           done: boolean
           id: string
+          priority: string
           task_date: string | null
           task_time: string | null
           text: string
@@ -30,6 +31,7 @@ export type Database = {
           day_of_week: string
           done?: boolean
           id?: string
+          priority?: string
           task_date?: string | null
           task_time?: string | null
           text: string
@@ -40,6 +42,7 @@ export type Database = {
           day_of_week?: string
           done?: boolean
           id?: string
+          priority?: string
           task_date?: string | null
           task_time?: string | null
           text?: string
