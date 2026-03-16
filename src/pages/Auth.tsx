@@ -36,6 +36,7 @@ const Auth = () => {
         animate={{ opacity: 1, y: 0 }}
         className="glass-card rounded-3xl p-8 w-full max-w-sm"
       >
+        <img src="/recordings-logo.svg" alt="Logo" className="size-10 mx-auto mb-4" />
         <h1 className="font-display text-3xl text-center text-foreground mb-2">Recording</h1>
         <p className="text-center text-muted-foreground text-sm mb-6">
           {isLogin ? "Inicia sesión para continuar" : "Crea tu cuenta"}
