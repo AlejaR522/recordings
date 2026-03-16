@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { LogOut } from "lucide-react";
 import HeaderCard from "@/components/HeaderCard";
@@ -17,6 +17,7 @@ interface Task {
   date: string;
   time: string;
   priority: Priority;
+  day: string;
 }
 
 const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
@@ -32,6 +33,35 @@ const Index = () => {
     days.forEach((day) => { initial[day] = []; });
     return initial;
   });
+
+  const notifiedTasksRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    const checkDueTasks = () => {
+      const now = new Date();
+      Object.values(tasksByDay)
+        .flat()
+        .forEach((task) => {
+          if (task.done) return;
+          if (!task.date || !task.time) return;
+          if (notifiedTasksRef.current.has(task.id)) return;
+
+          const taskDate = new Date(`${task.date}T${task.time}`);
+          if (Number.isNaN(taskDate.getTime())) return;
+
+          if (taskDate <= now) {
+            toast(`Tarea con fecha ${task.date} ${task.time} está vencida: ${task.text}`, {
+              duration: 5000,
+            });
+            notifiedTasksRef.current.add(task.id);
+          }
+        });
+    };
+
+    checkDueTasks();
+    const intervalId = window.setInterval(checkDueTasks, 30_000);
+    return () => window.clearInterval(intervalId);
+  }, [tasksByDay]);
 
   useEffect(() => {
     const loadTasks = async () => {
@@ -56,8 +86,7 @@ const Index = () => {
             done: t.done,
             date: t.task_date || "",
             time: t.task_time || "",
-            priority: (t.priority as Priority) || "media",
-          });
+            priority: (t.priority as Priority) || "media",            day,          });
         }
       });
       setTasksByDay(grouped);
@@ -113,6 +142,7 @@ const Index = () => {
         date: data.task_date || "",
         time: data.task_time || "",
         priority: (data.priority as Priority) || "media",
+        day: selectedDay,
       }],
     }));
   }, [selectedDay]);
@@ -126,12 +156,35 @@ const Index = () => {
     if (error) toast.error("Error al eliminar tarea");
   }, [selectedDay]);
 
-  const editTask = useCallback(async (id: string, text: string) => {
-    setTasksByDay((prev) => ({
-      ...prev,
-      [selectedDay]: prev[selectedDay].map((t) => (t.id === id ? { ...t, text } : t)),
-    }));
-    const { error } = await supabase.from("tasks").update({ text }).eq("id", id);
+  const editTask = useCallback(async (
+    id: string,
+    text: string,
+    date: string,
+    time: string,
+    priority: Priority,
+    day: string
+  ) => {
+    console.log("Index editTask", { id, text, date, time, priority, day });
+    setTasksByDay((prev) => {
+      const newTasks = { ...prev };
+      if (day === selectedDay) {
+        newTasks[selectedDay] = prev[selectedDay].map((t) =>
+          t.id === id ? { ...t, text, date, time, priority, day } : t
+        );
+      } else {
+        const existing = prev[selectedDay].find((t) => t.id === id);
+        if (!existing) return prev;
+
+        newTasks[selectedDay] = prev[selectedDay].filter((t) => t.id !== id);
+        newTasks[day] = [...prev[day], { ...existing, text, date, time, priority, day }];
+      }
+      return newTasks;
+    });
+
+    const { error } = await supabase
+      .from("tasks")
+      .update({ text, task_date: date, task_time: time, priority, day_of_week: day })
+      .eq("id", id);
     if (error) toast.error("Error al editar tarea");
   }, [selectedDay]);
 
@@ -196,6 +249,8 @@ const Index = () => {
           <TaskList
             title={`📋 Tareas - ${selectedDay}`}
             tasks={tasks}
+            days={days}
+            selectedDay={selectedDay}
             onToggle={toggleTask}
             onAdd={addTask}
             onDelete={deleteTask}

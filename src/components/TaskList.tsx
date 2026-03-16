@@ -11,15 +11,18 @@ interface Task {
   date: string;
   time: string;
   priority: Priority;
+  day: string;
 }
 
 interface TaskListProps {
   title: string;
   tasks: Task[];
+  days: string[];
+  selectedDay: string;
   onToggle: (id: string) => void;
   onAdd: (text: string, date: string, time: string, priority: Priority) => void;
   onDelete: (id: string) => void;
-  onEdit: (id: string, text: string) => void;
+  onEdit: (id: string, text: string, date: string, time: string, priority: Priority, day: string) => void;
 }
 
 const priorityConfig: Record<Priority, { label: string; color: string; bg: string }> = {
@@ -28,13 +31,17 @@ const priorityConfig: Record<Priority, { label: string; color: string; bg: strin
   baja: { label: "Baja", color: "text-emerald-600", bg: "bg-emerald-100 text-emerald-700 border-emerald-200" },
 };
 
-const TaskList = ({ title, tasks, onToggle, onAdd, onDelete, onEdit }: TaskListProps) => {
+const TaskList = ({ title, tasks, days, selectedDay, onToggle, onAdd, onDelete, onEdit }: TaskListProps) => {
   const [newTask, setNewTask] = useState("");
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
   const [newPriority, setNewPriority] = useState<Priority>("media");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
+  const [editDate, setEditDate] = useState("");
+  const [editTime, setEditTime] = useState("");
+  const [editPriority, setEditPriority] = useState<Priority>("media");
+  const [editDay, setEditDay] = useState<string>("");
 
   const handleAdd = () => {
     if (newTask.trim() && newDate && newTime) {
@@ -49,13 +56,28 @@ const TaskList = ({ title, tasks, onToggle, onAdd, onDelete, onEdit }: TaskListP
   const startEdit = (task: Task) => {
     setEditingId(task.id);
     setEditText(task.text);
+    setEditDate(task.date);
+    setEditTime(task.time);
+    setEditPriority(task.priority);
+    setEditDay(task.day || selectedDay || "");
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText("");
+    setEditDate("");
+    setEditTime("");
+    setEditPriority("media");
+    setEditDay("");
   };
 
   const saveEdit = () => {
-    if (editingId && editText.trim()) {
-      onEdit(editingId, editText.trim());
-      setEditingId(null);
-      setEditText("");
+    if (editingId && editText.trim() && editDate && editTime && editDay) {
+      console.log("TaskList saveEdit", { id: editingId, text: editText, date: editDate, time: editTime, priority: editPriority, day: editDay });
+      onEdit(editingId, editText.trim(), editDate, editTime, editPriority, editDay);
+      cancelEdit();
+    } else {
+      console.log("TaskList saveEdit skipped", { editingId, editText, editDate, editTime, editPriority, editDay });
     }
   };
 
@@ -88,14 +110,74 @@ const TaskList = ({ title, tasks, onToggle, onAdd, onDelete, onEdit }: TaskListP
 
             <div className="flex-1 min-w-0">
               {editingId === task.id ? (
-                <input
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && saveEdit()}
-                  onBlur={saveEdit}
-                  autoFocus
-                  className="w-full bg-muted/50 rounded-lg px-2 py-1 text-sm text-foreground outline-none focus:ring-1 focus:ring-primary"
-                />
+                <div className="space-y-2 w-full">
+                  <input
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    className="w-full bg-muted/50 rounded-lg px-2 py-1 text-sm text-foreground outline-none focus:ring-1 focus:ring-primary"
+                    autoFocus
+                  />
+
+                  <div className="flex gap-2">
+                    <input
+                      type="date"
+                      value={editDate}
+                      onChange={(e) => setEditDate(e.target.value)}
+                      className="flex-1 bg-muted/50 rounded-lg px-2 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
+                    />
+                    <input
+                      type="time"
+                      value={editTime}
+                      onChange={(e) => setEditTime(e.target.value)}
+                      className="flex-1 bg-muted/50 rounded-lg px-2 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
+                    />
+                    <select
+                      value={editDay}
+                      onChange={(e) => setEditDay(e.target.value)}
+                      className="flex-1 bg-muted/50 rounded-lg px-2 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
+                    >
+                      {days.map((d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex gap-1.5">
+                    {(["alta", "media", "baja"] as Priority[]).map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => setEditPriority(p)}
+                        className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold border transition-all ${
+                          editPriority === p
+                            ? priorityConfig[p].bg + " ring-1 ring-offset-1"
+                            : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted"
+                        }`}
+                        type="button"
+                      >
+                        {priorityConfig[p].label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={saveEdit}
+                      className="px-3 py-1 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                      type="button"
+                    >
+                      Guardar
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="px-3 py-1 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                      type="button"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <>
                   <div className="flex items-center gap-1.5">
