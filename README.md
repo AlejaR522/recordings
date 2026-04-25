@@ -1,4 +1,4 @@
-# 🌟 Wellbeing Tracker
+# Recordings
 
 A modern web application for tracking daily wellness habits, mood, sleep, hydration, and productivity. Built with React, TypeScript, and Supabase.
 
@@ -9,15 +9,15 @@ A modern web application for tracking daily wellness habits, mood, sleep, hydrat
 
 ## 📋 Features
 
-✨ **Mood Tracking** - Log your daily mood with an intuitive interface  
-📋 **Task Management** - Create, organize, and track tasks by priority and day  
-💧 **Hydration Tracker** - Monitor your daily water intake  
-😴 **Sleep Tracker** - Track sleep duration and quality  
-⚡ **Productivity Tracker** - Log completed tasks and productivity metrics  
-✅ **Checklist System** - Create and manage daily checklists  
-🙏 **Gratitude Journal** - Record moments of gratitude  
-🔐 **Authentication** - Secure login with Supabase Auth  
-💾 **Data Persistence** - All data synced with Supabase backend  
+ **Mood Tracking** - Log your daily mood with an intuitive interface  
+ **Task Management** - Create, organize, and track tasks by priority and day  
+ **Hydration Tracker** - Monitor your daily water intake  
+ **Sleep Tracker** - Track sleep duration and quality  
+ **Productivity Tracker** - Log completed tasks and productivity metrics  
+ **Checklist System** - Create and manage daily checklists  
+ **Gratitude Journal** - Record moments of gratitude  
+ **Authentication** - Secure login with Supabase Auth  
+ **Data Persistence** - All data synced with Supabase backend  
 
 ## 🛠️ Tech Stack
 
@@ -182,4 +182,4 @@ Created as a portfolio project showcasing modern web development practices.
 
 ---
 
-Made with ❤️ by [Your Name]
+Made with by Alejandra Ruiz end Raquel Martinez
