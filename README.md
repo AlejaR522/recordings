@@ -1,73 +1,185 @@
-# Welcome to your Lovable project
+# 🌟 Wellbeing Tracker
 
-## Project info
+A modern web application for tracking daily wellness habits, mood, sleep, hydration, and productivity. Built with React, TypeScript, and Supabase.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+![React](https://img.shields.io/badge/React-18-blue?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-blue?logo=tailwindcss)
+![Vite](https://img.shields.io/badge/Vite-5-blue?logo=vite)
 
-## How can I edit this code?
+## 📋 Features
 
-There are several ways of editing your application.
+✨ **Mood Tracking** - Log your daily mood with an intuitive interface  
+📋 **Task Management** - Create, organize, and track tasks by priority and day  
+💧 **Hydration Tracker** - Monitor your daily water intake  
+😴 **Sleep Tracker** - Track sleep duration and quality  
+⚡ **Productivity Tracker** - Log completed tasks and productivity metrics  
+✅ **Checklist System** - Create and manage daily checklists  
+🙏 **Gratitude Journal** - Record moments of gratitude  
+🔐 **Authentication** - Secure login with Supabase Auth  
+💾 **Data Persistence** - All data synced with Supabase backend  
 
-**Use Lovable**
+## 🛠️ Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- **Frontend Framework**: React 18 with TypeScript
+- **Build Tool**: Vite 5
+- **Styling**: Tailwind CSS + PostCSS
+- **UI Components**: shadcn/ui (Radix UI)
+- **State Management**: React Query (@tanstack/react-query)
+- **Backend**: Supabase (PostgreSQL + Auth)
+- **Animation**: Framer Motion
+- **Icons**: Lucide React
+- **Form Validation**: React Hook Form + Zod
+- **Testing**: Vitest
+- **Linting**: ESLint
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
+- Node.js 18+ and npm
+- Supabase account (free tier available)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. **Clone the repository**
+   ```sh
+   git clone https://github.com/yourusername/wellbeing-tracker.git
+   cd wellbeing-tracker
+   ```
 
-Follow these steps:
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```sh
+   cp .env.example .env.local
+   ```
+   
+   Fill in your Supabase credentials in `.env.local`:
+   ```
+   VITE_SUPABASE_PROJECT_ID=your_project_id
+   VITE_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   ```
+
+4. **Start the development server**
+   ```sh
+   npm run dev
+   ```
+   
+   The app will be available at `http://localhost:5173`
+
+## 📝 Available Scripts
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm run dev          # Start development server with hot reload
+npm run build        # Build for production
+npm run build:dev    # Build in development mode
+npm run preview      # Preview production build locally
+npm run lint         # Run ESLint
+npm run test         # Run tests once
+npm run test:watch   # Run tests in watch mode
 ```
 
-**Edit a file directly in GitHub**
+## 📁 Project Structure
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+src/
+├── components/          # Reusable React components
+│   ├── ui/             # shadcn/ui components
+│   ├── ChecklistCard.tsx
+│   ├── GratitudeCard.tsx
+│   ├── MoodTracker.tsx
+│   ├── TaskList.tsx
+│   └── ...
+├── pages/              # Page components
+│   ├── Index.tsx       # Main dashboard
+│   ├── Auth.tsx        # Login page
+│   └── NotFound.tsx    # 404 page
+├── hooks/              # Custom React hooks
+├── lib/                # Utility functions
+├── integrations/       # External integrations
+│   └── supabase/       # Supabase client & types
+├── App.tsx             # Main app component
+└── main.tsx            # Entry point
 
-**Use GitHub Codespaces**
+supabase/
+├── config.toml         # Supabase configuration
+└── migrations/         # Database migrations
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🔒 Setting up Supabase
 
-## What technologies are used for this project?
+1. Create a new project on [Supabase](https://supabase.com)
+2. Get your project URL and anon public key from project settings
+3. Run the database migrations:
+   ```sql
+   -- The migrations are already in supabase/migrations/
+   -- They will be applied when deploying
+   ```
+4. Add your credentials to `.env.local`
 
-This project is built with:
+## 🚀 Deployment
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Deploy to Vercel
 
-## How can I deploy this project?
+1. Push your code to GitHub
+2. Connect your repository to [Vercel](https://vercel.com)
+3. Add environment variables in Vercel dashboard
+4. Deploy!
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+```sh
+npm run build
+```
 
-## Can I connect a custom domain to my Lovable project?
+### Deploy to Other Platforms
 
-Yes, you can!
+This is a standard Node.js/React app built with Vite. It can be deployed to:
+- Netlify
+- GitHub Pages
+- Firebase Hosting
+- AWS Amplify
+- Railway
+- Render
+- Any Node.js hosting provider
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📖 Learning Resources
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- [React Documentation](https://react.dev)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Tailwind CSS Docs](https://tailwindcss.com/docs)
+- [Supabase Docs](https://supabase.com/docs)
+- [shadcn/ui Components](https://ui.shadcn.com)
+
+## 🐛 Troubleshooting
+
+### "Cannot find module" errors
+```sh
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Supabase connection issues
+- Verify your `.env.local` has correct credentials
+- Check that Supabase project is active
+- Ensure tables exist in your database
+
+### Build fails
+```sh
+npm run lint           # Fix linting issues
+npm run build:dev     # Check for build errors
+```
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 👤 Author
+
+Created as a portfolio project showcasing modern web development practices.
+
+---
+
+Made with ❤️ by [Your Name]
